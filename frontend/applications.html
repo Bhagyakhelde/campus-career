@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Applications - Campus Career</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Campus Career 🎓
+    </div>
+
+    <nav class="nav-links" id="navLinks"></nav>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h1 id="pageTitle">
+            Applications 📋
+        </h1>
+
+        <p id="pageDescription">
+            Track applications.
+        </p>
+
+    </section>
+
+
+    <section>
+
+        <div id="applicationsContainer">
+            <p>Loading applications...</p>
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    const role =
+        localStorage.getItem("role");
+
+    const studentId =
+        Number(localStorage.getItem("studentId"));
+
+    const API_URL =
+        "http://localhost:8080/api/applications";
+
+
+    /* =========================
+       ROLE CHECK
+    ========================= */
+
+    if (!role) {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    const navLinks =
+        document.getElementById("navLinks");
+
+
+    if (role === "RECRUITER") {
+
+        navLinks.innerHTML = `
+
+            <a href="admin.html">
+                Dashboard
+            </a>
+
+            <a href="manage-jobs.html">
+                Manage Jobs
+            </a>
+
+            <a href="add-job.html">
+                Add Job
+            </a>
+
+            <a href="applications.html">
+                Applications
+            </a>
+
+            <a href="#" onclick="logout()">
+                Logout
+            </a>
+
+        `;
+
+        document.getElementById(
+            "pageTitle"
+        ).textContent =
+            "Candidate Applications 📋";
+
+        document.getElementById(
+            "pageDescription"
+        ).textContent =
+            "Review applications submitted by students.";
+
+    }
+
+    else {
+
+        navLinks.innerHTML = `
+
+            <a href="index.html">
+                Dashboard
+            </a>
+
+            <a href="jobs.html">
+                Jobs
+            </a>
+
+            <a href="applications.html">
+                Applications
+            </a>
+
+            <a href="profile.html">
+                Profile
+            </a>
+
+            <a href="#" onclick="logout()">
+                Logout
+            </a>
+
+        `;
+
+        document.getElementById(
+            "pageTitle"
+        ).textContent =
+            "My Applications 📋";
+
+        document.getElementById(
+            "pageDescription"
+        ).textContent =
+            "Track the jobs you have applied for.";
+
+    }
+
+
+    /* =========================
+       LOAD APPLICATIONS
+    ========================= */
+
+    async function loadApplications() {
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load applications"
+                );
+
+            }
+
+
+            const applications =
+                await response.json();
+
+
+            if (role === "RECRUITER") {
+
+                displayRecruiterApplications(
+                    applications
+                );
+
+            }
+
+            else {
+
+                displayStudentApplications(
+                    applications
+                );
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            document.getElementById(
+                "applicationsContainer"
+            ).innerHTML =
+                "<p>Unable to load applications.</p>";
+
+        }
+
+    }
+
+
+    /* =========================
+       STUDENT APPLICATIONS
+    ========================= */
+
+    function displayStudentApplications(
+        applications
+    ) {
+
+        const container =
+            document.getElementById(
+                "applicationsContainer"
+            );
+
+
+        const myApplications =
+            applications.filter(
+                application =>
+                    Number(
+                        application.studentId
+                    ) === studentId
+            );
+
+
+        if (myApplications.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="job-card">
+
+                    <h3>
+                        No applications yet.
+                    </h3>
+
+                    <p>
+                        Apply for a job to see it here.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        myApplications.forEach(
+            application => {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.className =
+                    "job-card";
+
+
+                card.innerHTML = `
+
+                    <div class="job-header">
+
+                        <div>
+
+                            <div class="job-title">
+                                ${application.jobTitle}
+                            </div>
+
+                            <div class="company">
+                                ${application.companyName}
+                            </div>
+
+                        </div>
+
+                        <div class="match">
+                            ${application.status}
+                        </div>
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        Application ID:
+                        ${application.id}
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(card);
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       RECRUITER APPLICATIONS
+    ========================= */
+
+    function displayRecruiterApplications(
+        applications
+    ) {
+
+        const container =
+            document.getElementById(
+                "applicationsContainer"
+            );
+
+
+        if (applications.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="job-card">
+
+                    <h3>
+                        No applications yet.
+                    </h3>
+
+                    <p>
+                        Students have not applied
+                        for any jobs yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        applications.forEach(
+            application => {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.className =
+                    "job-card";
+
+
+                card.innerHTML = `
+
+                    <div class="job-header">
+
+                        <div>
+
+                            <div class="job-title">
+                                ${application.studentName}
+                            </div>
+
+                            <div class="company">
+                                ${application.studentEmail}
+                            </div>
+
+                        </div>
+
+                        <div class="match">
+                            ${application.status}
+                        </div>
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <strong>
+                            Job:
+                        </strong>
+
+                        ${application.jobTitle}
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <strong>
+                            Company:
+                        </strong>
+
+                        ${application.companyName}
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <strong>
+                            Application ID:
+                        </strong>
+
+                        ${application.id}
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(card);
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "studentId"
+        );
+
+        localStorage.removeItem(
+            "studentName"
+        );
+
+        localStorage.removeItem(
+            "role"
+        );
+
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    loadApplications();
+
+</script>
+
+</body>
+
+</html>

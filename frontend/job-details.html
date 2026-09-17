@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Job Details - Campus Career</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Campus Career 🎓
+    </div>
+
+    <nav class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="#">Jobs</a>
+        <a href="#">Applications</a>
+    </nav>
+
+</header>
+
+
+<main class="container">
+
+    <div id="jobContainer">
+
+        <p>Loading job details...</p>
+
+    </div>
+
+</main>
+
+
+<script>
+
+    // Get job ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const jobId = urlParams.get("id");
+
+
+    // Load job details
+    async function loadJobDetails() {
+
+        try {
+
+            const response =
+                await fetch(`http://localhost:8080/api/jobs/${jobId}`);
+
+            if (!response.ok) {
+                throw new Error("Job not found");
+            }
+
+            const job = await response.json();
+
+            displayJob(job);
+
+        } catch (error) {
+
+            console.error(error);
+
+            document.getElementById("jobContainer").innerHTML =
+                "<p>Unable to load job details.</p>";
+        }
+    }
+
+
+    // Display job
+    function displayJob(job) {
+
+        const container =
+            document.getElementById("jobContainer");
+
+        container.innerHTML = `
+
+            <div class="job-card">
+
+                <h1>
+                    ${job.jobTitle}
+                </h1>
+
+                <h2 class="company">
+                    ${job.companyName}
+                </h2>
+
+                <div class="job-info">
+
+                    📍 Location: ${job.location}
+
+                </div>
+
+                <div class="job-info">
+
+                    🎓 Minimum CGPA:
+                    ${job.minimumCgpa}
+
+                </div>
+
+                <div class="job-info">
+
+                    🎓 Graduation Year:
+                    ${job.graduationYear}
+
+                </div>
+
+                <div class="skills">
+
+                    <strong>Required Skills:</strong>
+
+                    <p>${job.skills}</p>
+
+                </div>
+
+                <div class="job-info">
+
+                    <strong>Job Description</strong>
+
+                    <p>
+                        ${job.description}
+                    </p>
+
+                </div>
+
+                <button
+                    class="apply-btn"
+                    onclick="applyForJob(${job.id})">
+
+                    Apply Now
+
+                </button>
+
+                <br><br>
+
+                <button
+                    class="apply-btn"
+                    onclick="goBack()">
+
+                    ← Back to Dashboard
+
+                </button>
+
+            </div>
+
+        `;
+    }
+
+
+    // Apply for job
+    async function applyForJob(jobId) {
+
+        try {
+
+            const response =
+                await fetch(
+                    `http://localhost:8080/api/applications/student/${studentId}/job/${jobId}`,
+                    {
+                        method: "POST"
+                    }
+                );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+
+                alert(data.message);
+
+                return;
+            }
+
+            alert("Application submitted successfully! 🎉");
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Unable to apply. Make sure Spring Boot is running.");
+
+        }
+    }
+
+
+    // Go back
+    function goBack() {
+
+        window.location.href = "index.html";
+
+    }
+
+
+    // Student ID
+    if (!localStorage.getItem("studentId")) {
+        window.location.href = "login.html";
+    }
+
+    const studentId =
+        Number(localStorage.getItem("studentId"));
+
+
+    // Start
+    loadJobDetails();
+
+</script>
+
+</body>
+
+</html>

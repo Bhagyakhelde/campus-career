@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Job - Campus Career</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Campus Career 🎓
+    </div>
+
+    <nav class="nav-links">
+
+        <a href="index.html">Dashboard</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="applications.html">Applications</a>
+        <a href="admin.html">Admin</a>
+        <a href="#" onclick="logout()">Logout</a>
+
+    </nav>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h1>
+            Add New Job 💼
+        </h1>
+
+        <p>
+            Create a job opportunity for eligible students.
+        </p>
+
+    </section>
+
+
+    <section class="jobs-section">
+
+        <form id="jobForm">
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="companyName">
+                        Company Name
+                    </label>
+
+                    <input
+                            type="text"
+                            id="companyName"
+                            placeholder="Example: Infosys"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="jobTitle">
+                        Job Title
+                    </label>
+
+                    <input
+                            type="text"
+                            id="jobTitle"
+                            placeholder="Example: Java Developer"
+                            required>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="location">
+                        Location
+                    </label>
+
+                    <input
+                            type="text"
+                            id="location"
+                            placeholder="Example: Bangalore"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="minimumCgpa">
+                        Minimum CGPA
+                    </label>
+
+                    <input
+                            type="number"
+                            id="minimumCgpa"
+                            step="0.1"
+                            min="0"
+                            max="10"
+                            placeholder="Example: 7.5"
+                            required>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="graduationYear">
+                        Graduation Year
+                    </label>
+
+                    <input
+                            type="number"
+                            id="graduationYear"
+                            placeholder="Example: 2026"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="skills">
+                        Required Skills
+                    </label>
+
+                    <input
+                            type="text"
+                            id="skills"
+                            placeholder="Java, Spring Boot, SQL"
+                            required>
+
+                    <small>
+                        Separate multiple skills with commas.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Job Description
+                </label>
+
+                <textarea
+                        id="description"
+                        rows="5"
+                        placeholder="Enter job description..."
+                        required></textarea>
+
+            </div>
+
+
+            <button
+                    type="submit"
+                    class="apply-btn">
+
+                Add Job
+
+            </button>
+
+
+            <p id="message"></p>
+
+        </form>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    const role =
+        localStorage.getItem("role");
+
+    if (role !== "RECRUITER") {
+        window.location.href = "index.html";
+    }
+
+
+    const API_URL =
+        "http://localhost:8080/api/jobs";
+
+
+    document.getElementById("jobForm")
+        .addEventListener(
+            "submit",
+            addJob
+        );
+
+
+    async function addJob(event) {
+
+        event.preventDefault();
+
+
+        const job = {
+
+            companyName:
+            document.getElementById(
+                "companyName"
+            ).value,
+
+            jobTitle:
+            document.getElementById(
+                "jobTitle"
+            ).value,
+
+            location:
+            document.getElementById(
+                "location"
+            ).value,
+
+            minimumCgpa:
+                Number(
+                    document.getElementById(
+                        "minimumCgpa"
+                    ).value
+                ),
+
+            graduationYear:
+                Number(
+                    document.getElementById(
+                        "graduationYear"
+                    ).value
+                ),
+
+            skills:
+            document.getElementById(
+                "skills"
+            ).value,
+
+            description:
+            document.getElementById(
+                "description"
+            ).value
+
+        };
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        message.textContent =
+            "Adding job...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        credentials: "include",
+
+                        body:
+                            JSON.stringify(job)
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to add job"
+                );
+
+            }
+
+
+            message.textContent =
+                "Job added successfully! 🎉";
+
+
+            document.getElementById(
+                "jobForm"
+            ).reset();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            message.textContent =
+                "Unable to add job. Make sure Spring Boot is running.";
+
+        }
+
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem("studentId");
+        localStorage.removeItem("studentName");
+        localStorage.removeItem("role");
+
+        window.location.href =
+            "login.html";
+
+    }
+
+</script>
+
+</body>
+
+</html>

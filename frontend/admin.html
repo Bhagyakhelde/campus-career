@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recruiter Dashboard - Campus Career</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Campus Career 🎓
+    </div>
+
+    <nav class="nav-links">
+
+        <a href="admin.html">Dashboard</a>
+
+        <a href="manage-jobs.html">Manage Jobs</a>
+
+        <a href="add-job.html">Add Job</a>
+
+        <a href="applications.html">Applications</a>
+
+        <a href="#" onclick="logout()">Logout</a>
+
+    </nav>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h1>
+            Recruiter Dashboard 👨‍💼
+        </h1>
+
+        <p>
+            Manage job applications and candidate status.
+        </p>
+
+    </section>
+
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <h3>
+                Total Applications
+            </h3>
+
+            <div
+                    class="number"
+                    id="totalApplications">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Applied
+            </h3>
+
+            <div
+                    class="number"
+                    id="appliedCount">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Shortlisted
+            </h3>
+
+            <div
+                    class="number"
+                    id="shortlistedCount">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Selected
+            </h3>
+
+            <div
+                    class="number"
+                    id="selectedCount">
+                0
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="jobs-section">
+
+        <h2>
+            Candidate Applications
+        </h2>
+
+        <div id="applicationsContainer">
+
+            <p>
+                Loading applications...
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    /*
+     * Recruiter access protection
+     */
+
+    const role =
+        localStorage.getItem("role");
+
+    if (role !== "RECRUITER") {
+
+        window.location.href =
+            "index.html";
+
+    }
+
+
+    /*
+     * Backend API
+     */
+
+    const API_URL =
+        "http://localhost:8080/api/applications";
+
+
+    /*
+     * Load all applications
+     */
+
+    async function loadApplications() {
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load applications"
+                );
+
+            }
+
+
+            const applications =
+                await response.json();
+
+
+            /*
+             * Update statistics
+             */
+
+            displayStatistics(
+                applications
+            );
+
+
+            /*
+             * Display candidate cards
+             */
+
+            displayApplications(
+                applications
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            document.getElementById(
+                "applicationsContainer"
+            ).innerHTML = `
+                <p>
+                    Unable to load applications.
+                    Please make sure Spring Boot is running.
+                </p>
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * Display application statistics
+     */
+
+    function displayStatistics(
+        applications
+    ) {
+
+        document.getElementById(
+            "totalApplications"
+        ).textContent =
+            applications.length;
+
+
+        document.getElementById(
+            "appliedCount"
+        ).textContent =
+            applications.filter(
+                app =>
+                    app.status === "APPLIED"
+            ).length;
+
+
+        document.getElementById(
+            "shortlistedCount"
+        ).textContent =
+            applications.filter(
+                app =>
+                    app.status === "SHORTLISTED"
+            ).length;
+
+
+        document.getElementById(
+            "selectedCount"
+        ).textContent =
+            applications.filter(
+                app =>
+                    app.status === "SELECTED"
+            ).length;
+
+    }
+
+
+    /*
+     * Display candidate applications
+     */
+
+    function displayApplications(
+        applications
+    ) {
+
+        const container =
+            document.getElementById(
+                "applicationsContainer"
+            );
+
+
+        container.innerHTML = "";
+
+
+        if (applications.length === 0) {
+
+            container.innerHTML = `
+                <p>
+                    No applications found.
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        applications.forEach(
+            application => {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "job-card";
+
+
+                /*
+                 * Backend now returns a flat DTO.
+                 */
+
+                const jobTitle =
+                    application.jobTitle ||
+                    "Job";
+
+
+                const companyName =
+                    application.companyName ||
+                    "Company";
+
+
+                const studentName =
+                    application.studentName ||
+                    "Candidate";
+
+
+                const studentEmail =
+                    application.studentEmail ||
+                    "Email not available";
+
+
+                const status =
+                    application.status ||
+                    "APPLIED";
+
+
+                card.innerHTML = `
+
+                    <div class="job-header">
+
+                        <div>
+
+                            <div class="job-title">
+                                ${jobTitle}
+                            </div>
+
+                            <div class="company">
+                                ${companyName}
+                            </div>
+
+                        </div>
+
+                        <div class="match">
+                            ${status}
+                        </div>
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <strong>
+                            Candidate:
+                        </strong>
+
+                        ${studentName}
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <strong>
+                            Email:
+                        </strong>
+
+                        ${studentEmail}
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <strong>
+                            Application ID:
+                        </strong>
+
+                        ${application.id}
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <strong>
+                            Current Status:
+                        </strong>
+
+                        ${status}
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <label>
+                            Change Status:
+                        </label>
+
+                        <select
+                            onchange="changeStatus(
+                                ${application.id},
+                                this.value
+                            )">
+
+                            <option
+                                value="APPLIED"
+                                ${status === "APPLIED"
+                    ? "selected"
+                    : ""}>
+                                Applied
+                            </option>
+
+
+                            <option
+                                value="SHORTLISTED"
+                                ${status === "SHORTLISTED"
+                    ? "selected"
+                    : ""}>
+                                Shortlisted
+                            </option>
+
+
+                            <option
+                                value="REJECTED"
+                                ${status === "REJECTED"
+                    ? "selected"
+                    : ""}>
+                                Rejected
+                            </option>
+
+
+                            <option
+                                value="SELECTED"
+                                ${status === "SELECTED"
+                    ? "selected"
+                    : ""}>
+                                Selected
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+
+    /*
+     * Change application status
+     */
+
+    async function changeStatus(
+        applicationId,
+        newStatus
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${applicationId}/status?status=${newStatus}`,
+                    {
+                        method: "PUT",
+                        credentials: "include"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to update status"
+                );
+
+            }
+
+
+            alert(
+                "Application status updated successfully!"
+            );
+
+
+            /*
+             * Reload applications
+             * so statistics and cards
+             * show the latest status.
+             */
+
+            loadApplications();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Unable to update application status."
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Logout
+     */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "studentId"
+        );
+
+        localStorage.removeItem(
+            "studentName"
+        );
+
+        localStorage.removeItem(
+            "role"
+        );
+
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    /*
+     * Start page
+     */
+
+    loadApplications();
+
+</script>
+
+</body>
+
+</html>

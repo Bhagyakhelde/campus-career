@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile - Campus Career</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .profile-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            max-width: 700px;
+        }
+
+        .profile-card h2 {
+            margin-bottom: 20px;
+        }
+
+        .profile-info {
+            margin: 15px 0;
+            font-size: 16px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .success-message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .error-message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        Campus Career 🎓
+    </div>
+
+
+    <nav class="nav-links">
+
+        <a href="index.html">
+            Dashboard
+        </a>
+
+        <a href="#">
+            Jobs
+        </a>
+
+        <a href="applications.html">
+            Applications
+        </a>
+
+        <a href="profile.html">
+            Profile
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<main class="container">
+
+
+    <section class="welcome">
+
+        <h1>
+            My Profile 👤
+        </h1>
+
+        <p>
+            View and manage your career profile.
+        </p>
+
+    </section>
+
+
+
+    <section>
+
+        <div id="profileContainer">
+
+            <p>
+                Loading profile...
+            </p>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+    if (!localStorage.getItem("studentId")) {
+        window.location.href = "login.html";
+    }
+
+    const studentId =
+        localStorage.getItem("studentId");
+
+    const API_URL =
+        `http://localhost:8080/api/students/${studentId}`;
+
+
+
+    // Load profile
+    async function loadProfile() {
+
+        try {
+
+            const response =
+                await fetch(API_URL);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load profile"
+                );
+
+            }
+
+
+            const student =
+                await response.json();
+
+
+            displayProfile(student);
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            document.getElementById(
+                "profileContainer"
+            ).innerHTML =
+
+                "<p>Unable to load profile.</p>";
+
+        }
+
+    }
+
+
+
+    // Display profile
+    function displayProfile(student) {
+
+        const container =
+            document.getElementById(
+                "profileContainer"
+            );
+
+
+        container.innerHTML = `
+
+        <div class="profile-card">
+
+            <h2>
+                ${student.name}
+            </h2>
+
+
+            <div class="profile-info">
+
+                📧 Email:
+                ${student.email}
+
+            </div>
+
+
+            <div class="profile-info">
+
+                🎓 CGPA:
+                ${student.cgpa}
+
+            </div>
+
+
+            <div class="profile-info">
+
+                📅 Graduation Year:
+                ${student.graduationYear}
+
+            </div>
+
+
+            <div class="profile-info">
+
+                ❌ Backlogs:
+                ${student.backlogs}
+
+            </div>
+
+
+            <div class="skills">
+
+                <strong>
+                    Skills:
+                </strong>
+
+                <p>
+                    ${student.skills}
+                </p>
+
+            </div>
+
+
+            <br>
+
+
+            <button
+                class="apply-btn"
+                onclick="showEditForm()">
+
+                Edit Profile
+
+            </button>
+
+        </div>
+
+    `;
+
+    }
+
+
+
+    // Show edit form
+    function showEditForm() {
+
+        const container =
+            document.getElementById(
+                "profileContainer"
+            );
+
+
+        container.innerHTML = `
+
+        <div class="profile-card">
+
+            <h2>
+                Edit Profile ✏️
+            </h2>
+
+
+            <label>
+                Name
+            </label>
+
+            <input
+                type="text"
+                id="editName"
+                placeholder="Enter your name"
+            >
+
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="editEmail"
+                placeholder="Enter your email"
+            >
+
+
+            <label>
+                CGPA
+            </label>
+
+            <input
+                type="number"
+                step="0.1"
+                id="editCgpa"
+                placeholder="Enter CGPA"
+            >
+
+
+            <label>
+                Graduation Year
+            </label>
+
+            <input
+                type="number"
+                id="editGraduationYear"
+                placeholder="Enter graduation year"
+            >
+
+
+            <label>
+                Backlogs
+            </label>
+
+            <input
+                type="number"
+                id="editBacklogs"
+                placeholder="Enter number of backlogs"
+            >
+
+
+            <label>
+                Skills
+            </label>
+
+            <input
+                type="text"
+                id="editSkills"
+                placeholder="Java, SQL, HTML"
+            >
+
+          <label>Password</label>
+           <input type="password"
+           id="editPassword"
+           placeholder="Enter new password">
+            <br><br>
+
+
+            <button
+                class="apply-btn"
+                onclick="updateProfile()">
+
+                Save Changes
+
+            </button>
+
+
+            <button
+                class="apply-btn"
+                onclick="loadProfile()">
+
+                Cancel
+
+            </button>
+
+
+            <div id="message"></div>
+
+        </div>
+
+    `;
+
+
+        // Load current student information
+        loadCurrentStudentIntoForm();
+
+    }
+
+
+
+    // Load existing information into form
+    async function loadCurrentStudentIntoForm() {
+
+        try {
+
+            const response =
+                await fetch(API_URL);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load student"
+                );
+
+            }
+
+
+            const student =
+                await response.json();
+
+
+            document.getElementById(
+                "editName"
+            ).value =
+                student.name || "";
+
+
+            document.getElementById(
+                "editEmail"
+            ).value =
+                student.email || "";
+
+
+            document.getElementById(
+                "editCgpa"
+            ).value =
+                student.cgpa || "";
+
+
+            document.getElementById(
+                "editGraduationYear"
+            ).value =
+                student.graduationYear || "";
+
+
+            document.getElementById(
+                "editBacklogs"
+            ).value =
+                student.backlogs ?? "";
+
+
+            document.getElementById(
+                "editSkills"
+            ).value =
+                student.skills || "";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+
+
+
+    // Update profile
+    async function updateProfile() {
+
+        const updatedStudent = {
+
+            name:
+            document.getElementById(
+                "editName"
+            ).value,
+
+            email:
+            document.getElementById(
+                "editEmail"
+            ).value,
+
+            cgpa:
+                parseFloat(
+                    document.getElementById(
+                        "editCgpa"
+                    ).value
+                ),
+
+            graduationYear:
+                parseInt(
+                    document.getElementById(
+                        "editGraduationYear"
+                    ).value
+                ),
+
+            backlogs:
+                parseInt(
+                    document.getElementById(
+                        "editBacklogs"
+                    ).value
+                ),
+
+            skills:
+            document.getElementById("editSkills").value,
+
+            password:
+            document.getElementById("editPassword").value
+
+        };
+
+
+        try {
+
+            const response =
+                await fetch(
+
+                    API_URL,
+
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                updatedStudent
+                            )
+
+                    }
+
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Failed to update profile"
+                );
+
+            }
+
+
+            alert(
+                "Profile updated successfully! 🎉"
+            );
+
+
+            loadProfile();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+
+            if (message) {
+
+                message.className =
+                    "error-message";
+
+                message.textContent =
+                    "Unable to update profile. Please try again.";
+
+            }
+
+        }
+
+    }
+
+
+
+    // Start
+    loadProfile();
+
+
+</script>
+
+
+</body>
+
+</html>
