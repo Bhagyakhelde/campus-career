@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Comparator;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin(
+        origins = "https://campus-career-jet.vercel.app",
+        allowCredentials = "true"
+)
 @RestController
 @RequestMapping("/api/matching")
 public class JobMatchingController {

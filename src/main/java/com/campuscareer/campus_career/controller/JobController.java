@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin(
-        origins = "http://localhost:63342",
+        origins = "https://campus-career-jet.vercel.app",
         allowCredentials = "true"
 )
 @RestController
@@ -22,7 +22,6 @@ public class JobController {
     public JobController(JobService jobService) {
         this.jobService = jobService;
     }
-
 
     // ADD JOB - RECRUITER ONLY
     @PostMapping
@@ -41,13 +40,11 @@ public class JobController {
         );
     }
 
-
     // GET ALL JOBS - STUDENTS AND RECRUITERS
     @GetMapping
     public List<Job> getAllJobs() {
         return jobService.getAllJobs();
     }
-
 
     // GET ONE JOB - STUDENTS AND RECRUITERS
     @GetMapping("/{id}")
@@ -60,7 +57,6 @@ public class JobController {
                         ResponseEntity.notFound().build()
                 );
     }
-
 
     // UPDATE JOB - RECRUITER ONLY
     @PutMapping("/{id}")
@@ -115,7 +111,6 @@ public class JobController {
                 );
     }
 
-
     // DELETE JOB - RECRUITER ONLY
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteJob(
@@ -137,7 +132,6 @@ public class JobController {
 
         return ResponseEntity.notFound().build();
     }
-
 
     // Check whether logged-in user is a recruiter
     private boolean isRecruiter(HttpSession session) {

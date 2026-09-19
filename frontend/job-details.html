@@ -52,7 +52,7 @@
         try {
 
             const response =
-                await fetch(`http://localhost:8080/api/jobs/${jobId}`);
+                await fetch(`http:///api/jobs/${jobId}`);
 
             if (!response.ok) {
                 throw new Error("Job not found");
@@ -159,7 +159,7 @@
 
             const response =
                 await fetch(
-                    `http://localhost:8080/api/applications/student/${studentId}/job/${jobId}`,
+                    `http:///api/applications/student/${studentId}/job/${jobId}`,
                     {
                         method: "POST"
                     }

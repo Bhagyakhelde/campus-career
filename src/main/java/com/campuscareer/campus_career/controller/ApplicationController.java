@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/applications")
 @CrossOrigin(
-        origins = "http://localhost:63342",
+        origins = "https://campus-career-jet.vercel.app",
         allowCredentials = "true"
 )
 public class ApplicationController {

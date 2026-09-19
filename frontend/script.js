@@ -5,7 +5,7 @@ if (!localStorage.getItem("studentId")) {
 const studentId =
     localStorage.getItem("studentId");
 const API_URL =
-    `http://localhost:8080/api/students/${studentId}/dashboard`;
+    `http:///api/students/${studentId}/dashboard`;
 
 
 // Load dashboard data
