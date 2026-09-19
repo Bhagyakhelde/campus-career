@@ -18,10 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/applications")
-@CrossOrigin(
-        origins = "https://campus-career-jet.vercel.app",
-        allowCredentials = "true"
-)
+@CrossOrigin(origins = "https://campus-career-jet.vercel.app")
 public class ApplicationController {
 
     private final ApplicationService applicationService;

@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(
-        origins = "https://campus-career-jet.vercel.app",
-        allowCredentials = "true"
-)
+@CrossOrigin(origins = "https://campus-career-jet.vercel.app")
 @RestController
 @RequestMapping("/api/jobs")
 public class JobController {
