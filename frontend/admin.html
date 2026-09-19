@@ -228,42 +228,26 @@
      * Display application statistics
      */
 
-    function displayStatistics(
-        applications
-    ) {
+    function displayStatistics(applications) {
 
-        document.getElementById(
-            "totalApplications"
-        ).textContent =
-            applications.length;
+        const total = applications.length;
 
+        const applied = applications.filter(
+            app => String(app.status).toUpperCase() === "APPLIED"
+        ).length;
 
-        document.getElementById(
-            "appliedCount"
-        ).textContent =
-            applications.filter(
-                app =>
-                    app.status === "APPLIED"
-            ).length;
+        const shortlisted = applications.filter(
+            app => String(app.status).toUpperCase() === "SHORTLISTED"
+        ).length;
 
+        const selected = applications.filter(
+            app => String(app.status).toUpperCase() === "SELECTED"
+        ).length;
 
-        document.getElementById(
-            "shortlistedCount"
-        ).textContent =
-            applications.filter(
-                app =>
-                    app.status === "SHORTLISTED"
-            ).length;
-
-
-        document.getElementById(
-            "selectedCount"
-        ).textContent =
-            applications.filter(
-                app =>
-                    app.status === "SELECTED"
-            ).length;
-
+        document.getElementById("totalApplications").textContent = total;
+        document.getElementById("appliedCount").textContent = applied;
+        document.getElementById("shortlistedCount").textContent = shortlisted;
+        document.getElementById("selectedCount").textContent = selected;
     }
 
 
