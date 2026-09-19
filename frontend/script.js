@@ -4,8 +4,10 @@ if (!localStorage.getItem("studentId")) {
 
 const studentId =
     localStorage.getItem("studentId");
+const studentId = localStorage.getItem("studentId");
+
 const API_URL =
-    `http:///api/students/${studentId}/dashboard`;
+    `https://campus-career-backend-n9s9.onrender.com/api/students/${studentId}/dashboard`;
 
 
 // Load dashboard data
