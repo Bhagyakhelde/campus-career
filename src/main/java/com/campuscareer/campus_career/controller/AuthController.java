@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "https://campus-career-jet.vercel.app")
+@CrossOrigin(
+        origins = "https://campus-career-jet.vercel.app",
+        allowCredentials = "true"
+)
 public class AuthController {
 
     private final StudentRepository studentRepository;
