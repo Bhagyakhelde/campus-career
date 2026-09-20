@@ -68,6 +68,7 @@
     const API_BASE_URL =
         "https://campus-career-backend-n9s9.onrender.com";
 
+
     async function loadJobs() {
 
         try {
@@ -88,12 +89,39 @@
 
         } catch (error) {
 
-            console.error(error);
+            console.error("Jobs error:", error);
 
             document.getElementById("jobsContainer").innerHTML =
                 "<p>Unable to load jobs.</p>";
         }
     }
+
+
+    async function loadApplications() {
+
+        try {
+
+            const response =
+                await fetch(`${API_BASE_URL}/api/applications`);
+
+            if (!response.ok) {
+                throw new Error("Failed to load applications");
+            }
+
+            const applications = await response.json();
+
+            document.getElementById("totalApplications").textContent =
+                applications.length;
+
+        } catch (error) {
+
+            console.error("Applications error:", error);
+
+            document.getElementById("totalApplications").textContent =
+                "0";
+        }
+    }
+
 
     function displayJobs(jobs) {
 
@@ -111,7 +139,9 @@
 
             card.innerHTML = `
             <div class="job-header">
+
                 <div>
+
                     <div class="job-title">
                         ${job.jobTitle}
                     </div>
@@ -119,7 +149,9 @@
                     <div class="company">
                         ${job.companyName}
                     </div>
+
                 </div>
+
             </div>
 
             <div class="job-info">
@@ -141,6 +173,7 @@
         });
     }
 
+
     function logout() {
 
         localStorage.removeItem("studentId");
@@ -150,7 +183,9 @@
         window.location.href = "login.html";
     }
 
+
     loadJobs();
+    loadApplications();
 
 </script>
 
