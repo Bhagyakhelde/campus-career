@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recruiter Dashboard - Campus Career</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Campus Career 🎓</div>
+
+    <nav class="nav-links">
+        <a href="recruiter-dashboard.html">Dashboard</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <h1>Recruiter Dashboard 👋</h1>
+        <p>Manage job opportunities and applications.</p>
+    </section>
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <h3>Total Jobs</h3>
+            <div class="number" id="totalJobs">Loading...</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Applications</h3>
+            <div class="number" id="totalApplications">
+                Loading...
+            </div>
+        </div>
+
+    </section>
+
+    <section class="jobs-section">
+
+        <h2>Job Opportunities</h2>
+
+        <div id="jobsContainer">
+            <p>Loading jobs...</p>
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+
+    const studentId = localStorage.getItem("studentId");
+    const role = localStorage.getItem("role");
+
+    if (!studentId || role !== "RECRUITER") {
+        window.location.href = "login.html";
+    }
+
+    const API_BASE_URL =
+        "https://campus-career-backend-n9s9.onrender.com";
+
+    async function loadJobs() {
+
+        try {
+
+            const response =
+                await fetch(`${API_BASE_URL}/api/jobs`);
+
+            if (!response.ok) {
+                throw new Error("Failed to load jobs");
+            }
+
+            const jobs = await response.json();
+
+            document.getElementById("totalJobs").textContent =
+                jobs.length;
+
+            displayJobs(jobs);
+
+        } catch (error) {
+
+            console.error(error);
+
+            document.getElementById("jobsContainer").innerHTML =
+                "<p>Unable to load jobs.</p>";
+        }
+    }
+
+    function displayJobs(jobs) {
+
+        const container =
+            document.getElementById("jobsContainer");
+
+        container.innerHTML = "";
+
+        jobs.forEach(job => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "job-card";
+
+            card.innerHTML = `
+            <div class="job-header">
+                <div>
+                    <div class="job-title">
+                        ${job.jobTitle}
+                    </div>
+
+                    <div class="company">
+                        ${job.companyName}
+                    </div>
+                </div>
+            </div>
+
+            <div class="job-info">
+                📍 ${job.location}
+            </div>
+
+            <div class="skills">
+                <strong>Required Skills:</strong>
+                ${job.requiredSkills}
+            </div>
+
+            <div class="skills">
+                <strong>Minimum CGPA:</strong>
+                ${job.minimumCgpa}
+            </div>
+        `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function logout() {
+
+        localStorage.removeItem("studentId");
+        localStorage.removeItem("studentName");
+        localStorage.removeItem("role");
+
+        window.location.href = "login.html";
+    }
+
+    loadJobs();
+
+</script>
+
+</body>
+</html>
