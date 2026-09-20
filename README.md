@@ -131,3 +131,95 @@ Repository Layer
 JPA / Hibernate
     ↓
 MySQL
+
+🔐 Authentication & Security
+BCrypt password hashing
+Session-based authentication
+Student and recruiter roles
+Role-based recruiter actions
+CORS configuration
+Database credentials managed through environment variables
+📂 Project Structure
+campus-career/
+│
+├── frontend/
+│   ├── index.html
+│   ├── login.html
+│   ├── dashboard.html
+│   ├── jobs.html
+│   ├── job-details.html
+│   ├── applications.html
+│   ├── profile.html
+│   ├── recruiter-dashboard.html
+│   ├── manage-jobs.html
+│   ├── add-job.html
+│   ├── edit-job.html
+│   ├── script.js
+│   └── style.css
+│
+├── src/
+│   └── main/
+│       └── java/
+│           └── com/
+│               └── campuscareer/
+│                   └── campus_career/
+│                       ├── config/
+│                       ├── controller/
+│                       ├── dto/
+│                       ├── entity/
+│                       ├── exception/
+│                       ├── matching/
+│                       ├── repository/
+│                       └── service/
+│
+├── Dockerfile
+├── pom.xml
+└── mvnw
+🔌 Major REST APIs
+Authentication
+POST /api/auth/login
+Jobs
+GET    /api/jobs
+GET    /api/jobs/{id}
+POST   /api/jobs
+PUT    /api/jobs/{id}
+DELETE /api/jobs/{id}
+Matching
+GET /api/matching/student/{studentId}
+Applications
+POST /api/applications
+GET /api/applications
+GET /api/applications/{id}
+PUT /api/applications/{id}/status
+DELETE /api/applications/{id}
+Students
+GET /api/students/{id}
+GET /api/students/{id}/dashboard
+☁️ Deployment
+
+The project is deployed using:
+
+GitHub
+   │
+   ├── Frontend → Vercel
+   │
+   └── Backend → Render
+                    │
+                    ↓
+                Aiven MySQL
+🎯 Future Improvements
+Resume parsing and skill extraction
+Email notifications for application updates
+Advanced job recommendations
+Recruiter search and filtering
+Admin management
+JWT-based authentication
+Automated deployment pipeline
+👩‍💻 Author
+
+Bhagyashree S Khelde
+
+B.Tech — Electronics & Communication Engineering
+2026 Graduate
+
+GitHub: https://github.com/Bhagyakhelde
