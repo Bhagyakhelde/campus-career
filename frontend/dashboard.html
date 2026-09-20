@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Campus Career</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Campus Career 🎓
+    </div>
+
+    <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="applications.html">Applications</a>
+        <a href="profile.html">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h1>
+            Welcome, <span id="studentName">Student</span> 👋
+        </h1>
+
+        <p>
+            Find job opportunities that match your skills and eligibility.
+        </p>
+
+    </section>
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <h3>Total Jobs</h3>
+            <div class="number" id="totalJobs">Loading...</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Eligible Jobs</h3>
+            <div class="number" id="eligibleJobs">Loading...</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Applied Jobs</h3>
+            <div class="number" id="appliedJobs">Loading...</div>
+        </div>
+
+    </section>
+
+    <section class="jobs-section">
+
+        <h2>Recommended Jobs</h2>
+
+        <div id="jobsContainer">
+            <p>Loading recommended jobs...</p>
+        </div>
+
+    </section>
+
+</main>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
