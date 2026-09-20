@@ -1,29 +1,12 @@
-# Campus Career 🎓💼
+# 🎓 Campus Career
 
-Campus Career is a full-stack job matching platform built to help students find suitable job opportunities based on their academic qualifications and technical skills.
+A full-stack job matching and application platform that helps students find suitable job opportunities based on their skills, CGPA, graduation year, and eligibility.
 
-## 🚀 Live Demo
+🔗 **Live Demo:** https://campus-career-jet.vercel.app/
 
-https://campus-career-jet.vercel.app/
+🔗 **GitHub:** https://github.com/Bhagyakhelde/campus-career
 
-## 💻 GitHub Repository
-
-https://github.com/Bhagyakhelde/campus-career
-
-## 📌 About the Project
-
-Students often find it difficult to identify which job opportunities they are eligible for because every company has different requirements.
-
-Campus Career compares a student's profile with job requirements and provides:
-
-- Job match percentage
-- Eligibility status
-- Matched skills
-- Missing skills
-- Eligibility reason
-- Application status
-
-The platform also provides separate workflows for students and recruiters.
+---
 
 ## ✨ Features
 
@@ -31,108 +14,47 @@ The platform also provides separate workflows for students and recruiters.
 
 - Student login
 - Profile management
-- View available jobs
-- View detailed job requirements
-- Get personalized job matching
-- Check eligibility
-- View matched and missing skills
+- Browse job opportunities
+- Job eligibility checking
+- Match percentage calculation
+- Matched and missing skills
 - Apply for jobs
-- Prevent duplicate applications
 - Track application status
+- Duplicate application prevention
 
-### 🧑‍💼 Recruiter
+### 👨‍💼 Recruiter
 
 - Recruiter login
-- Create job postings
-- Edit job postings
-- Delete job postings
+- Recruiter dashboard
+- Create jobs
+- Edit jobs
+- Delete jobs
 - View candidate applications
-- Review candidate details
 - Update application status
-- Recruiter dashboard with application statistics
 
-## 🧠 Job Matching System
+---
 
-The matching engine evaluates jobs using four factors:
+## 🎯 Job Matching System
+
+The matching system calculates a job match percentage using:
 
 | Criteria | Weight |
 |---|---:|
-| Technical Skills | 50% |
+| Skills | 50% |
 | CGPA | 25% |
 | Graduation Year | 15% |
 | Backlogs | 10% |
 
-The system also checks basic eligibility:
+The system also shows:
 
-- CGPA must meet the job's minimum requirement
-- Graduation year must match the required year
-- Student must have zero backlogs
+- ✅ Matched skills
+- ❌ Missing skills
+- 📊 Match percentage
+- 📝 Eligibility reason
 
-### Example
+---
 
-A student with:
-
-- CGPA: 8.1
-- Graduation Year: 2026
-- Backlogs: 0
-- Skills: Java, SQL, HTML, CSS, Spring Boot
-
-can be compared against a job requiring:
-
-- Minimum CGPA: 7.5
-- Graduation Year: 2026
-- Skills: Java, Spring Boot, SQL
-
-The system identifies the matching skills, missing skills, eligibility and overall match percentage.
-
-## 🛠️ Technology Stack
-
-### Frontend
-
-- HTML5
-- CSS3
-- JavaScript
-- Fetch API
-
-### Backend
-
-- Java 21
-- Spring Boot 4.0.8
-- Spring MVC
-- Spring Data JPA
-- Hibernate
-- Maven
-- Spring Security
-
-### Database
-
-- MySQL 8.4
-- Aiven MySQL
-
-### Deployment
-
-- Vercel — Frontend
-- Render — Backend
-- Aiven — Database
-
-## 🏗️ Architecture
-
-```text
-Frontend
-    ↓
-REST API
-    ↓
-Spring Boot Controllers
-    ↓
-Service Layer
-    ↓
-Repository Layer
-    ↓
-JPA / Hibernate
-    ↓
-MySQL
-
-#### 🔐 Authentication & Security
+## 🔐 Authentication & Security
 
 - BCrypt password hashing
 - Session-based authentication
@@ -141,6 +63,50 @@ MySQL
 - CORS configuration
 - Database credentials managed through environment variables
 
+---
+
+## 🛠️ Tech Stack
+
+**Frontend**
+- HTML
+- CSS
+- JavaScript
+
+**Backend**
+- Java
+- Spring Boot
+- Spring Data JPA
+- Hibernate
+- Maven
+
+**Database**
+- MySQL
+
+**Deployment**
+- Vercel
+- Render
+- Aiven MySQL
+
+---
+
+## 🏗️ Architecture
+
+```text
+Frontend
+   ↓
+REST APIs
+   ↓
+Spring Boot Controllers
+   ↓
+Services
+   ↓
+Repositories / JPA
+   ↓
+MySQL Database
+```
+
+---
+
 ## 📂 Project Structure
 
 ```text
@@ -148,6 +114,7 @@ campus-career/
 │
 ├── frontend/
 │   ├── index.html
+│   ├── login.html
 │   ├── dashboard.html
 │   ├── jobs.html
 │   ├── job-details.html
@@ -155,26 +122,20 @@ campus-career/
 │   ├── profile.html
 │   ├── recruiter-dashboard.html
 │   ├── manage-jobs.html
-│   ├── add-job.html
-│   ├── edit-job.html
-│   ├── login.html
-│   ├── css/
-│   └── js/
+│   └── js / css
 │
 ├── src/
 │   └── main/
 │       ├── java/
-│       │   └── com/
-│       │       └── campuscareer/
-│       │           └── campus_career/
-│       │               ├── config/
-│       │               ├── controller/
-│       │               ├── dto/
-│       │               ├── entity/
-│       │               ├── exception/
-│       │               ├── matching/
-│       │               ├── repository/
-│       │               └── service/
+│       │   └── com/campuscareer/campus_career/
+│       │       ├── config/
+│       │       ├── controller/
+│       │       ├── dto/
+│       │       ├── entity/
+│       │       ├── exception/
+│       │       ├── matching/
+│       │       ├── repository/
+│       │       └── service/
 │       │
 │       └── resources/
 │           └── application.properties
@@ -183,3 +144,74 @@ campus-career/
 ├── mvnw
 ├── mvnw.cmd
 └── README.md
+```
+
+---
+
+## 🔗 REST APIs
+
+### Authentication
+
+```text
+POST /api/auth/login
+```
+
+### Jobs
+
+```text
+GET    /api/jobs
+GET    /api/jobs/{id}
+POST   /api/jobs
+PUT    /api/jobs/{id}
+DELETE /api/jobs/{id}
+```
+
+### Job Matching
+
+```text
+GET /api/matching/student/{studentId}
+```
+
+### Applications
+
+```text
+POST   /api/applications
+GET    /api/applications
+GET    /api/applications/{id}
+PUT    /api/applications/{id}/status
+DELETE /api/applications/{id}
+```
+
+---
+
+## 🚀 Deployment
+
+**Frontend:** Vercel  
+https://campus-career-jet.vercel.app/
+
+**Backend:** Render  
+https://campus-career-backend-n9s9.onrender.com
+
+**Database:** Aiven MySQL
+
+Database credentials are stored using environment variables.
+
+---
+
+## 🔮 Future Improvements
+
+- Resume upload and parsing
+- Email notifications
+- AI-based job recommendations
+- Advanced candidate filtering
+- Admin dashboard
+- Interview scheduling
+
+---
+
+## 👩‍💻 Author
+
+**Bhagyashree S Khelde**
+
+🔗 GitHub: https://github.com/Bhagyakhelde  
+🔗 LinkedIn: https://www.linkedin.com/in/bhagyakhelde/
